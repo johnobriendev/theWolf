@@ -45,6 +45,14 @@ function App() {
     }
   };
 
+  const handleDeletePlayer = (index) => {
+    setState((prevState) => {
+      const updatedPlayers = [...prevState.players];
+      updatedPlayers.splice(index, 1);
+      return { ...prevState, players: updatedPlayers };
+    });
+  };
+
   const handleWolfChoiceChange = (hole, choice) => {
     setState((prevState) => ({
       ...prevState,
@@ -77,11 +85,21 @@ function App() {
   return(
     <div className="container">
       {state.players.length < 4 ? (
-        <PlayerInput
-          newPlayer={newPlayer}
-          handlePlayerNameChange={handlePlayerNameChange}
-          handleAddPlayer={handleAddPlayer}
-        />
+        <div>
+          <PlayerInput
+            newPlayer={newPlayer}
+            handlePlayerNameChange={handlePlayerNameChange}
+            handleAddPlayer={handleAddPlayer}
+          />
+          <ul>
+              {state.players.map((player, index) => (
+                <li key={index}>
+                  {player} <button onClick={() => handleDeletePlayer(index)}>Delete</button>
+                </li>
+              ))}
+          </ul>
+        </div>      
+
       ) : (
         <>
           <div className="hole-navigation">
