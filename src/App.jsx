@@ -5,6 +5,7 @@ import WolfChoice from "./components/WolfChoice"
 const initialState = {
   players: [],
   currentHole: 1,
+  gameStarted: false,
   wolfChoices: {}
 };
 
@@ -53,6 +54,13 @@ function App() {
     });
   };
 
+  const handleStartGame = () => {
+    setState((prevState) => ({
+      ...prevState,
+      gameStarted: true
+    }));
+  };
+
   const handleWolfChoiceChange = (hole, choice) => {
     setState((prevState) => ({
       ...prevState,
@@ -71,20 +79,20 @@ function App() {
   };
 
   useEffect(() => {
-    if (state.players.length === 4) {
+    if (state.players.length === 4 && state.gameStarted) {
       const order = getPlayerOrder(state.currentHole, state.players);
       const wolfIndex = order[order.length - 1];
       const wolf = state.players[wolfIndex];
-      const wolfChoice = { wolf, partner: '', blindWolf: false, loneWolf: false };
+      const wolfChoice = { wolf, partner: '', blindWolf: false, loneWolf: true };
       handleWolfChoiceChange(state.currentHole, wolfChoice);
     }
-  }, [state.currentHole, state.players]);
+  }, [state.currentHole, state.players, state.gameStarted]);
 
 
 
   return(
     <div className="container">
-      {state.players.length < 4 ? (
+      {!state.gameStarted ? (
         <div>
           <PlayerInput
             newPlayer={newPlayer}
@@ -92,14 +100,16 @@ function App() {
             handleAddPlayer={handleAddPlayer}
           />
           <ul>
-              {state.players.map((player, index) => (
-                <li key={index}>
-                  {player} <button onClick={() => handleDeletePlayer(index)}>Delete</button>
-                </li>
-              ))}
+            {state.players.map((player, index) => (
+              <li key={index}>
+                {player} <button onClick={() => handleDeletePlayer(index)}>Delete</button>
+              </li>
+            ))}
           </ul>
-        </div>      
-
+          {state.players.length === 4 && (
+            <button onClick={handleStartGame}>Start Game</button>
+          )}
+        </div>
       ) : (
         <>
           <div className="hole-navigation">

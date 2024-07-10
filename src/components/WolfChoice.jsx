@@ -2,7 +2,7 @@ import React from "react";
 
 const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange}) => {
 
-  const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, loneWolf: false };
+  const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, loneWolf: true };
 
 
   const getCurrentWolf = () => {
@@ -18,8 +18,15 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange})
     }
   };
 
+  const getTeeOrder = () => {
+    const holeOrder = (currentHole - 1) % players.length;
+    const teeOrder = players.slice(holeOrder).concat(players.slice(0, holeOrder));
+    return teeOrder;
+  };
+
   const wolfIndex = getCurrentWolf();
   const wolf = players[wolfIndex];
+  const teeOrder = getTeeOrder();
 
   // Handle wolf choice changes
   const handleChange = (e) => {
@@ -50,7 +57,6 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange})
             onChange={handleChange}
             disabled={wolfChoice.blindWolf || wolfChoice.loneWolf}
           >
-            <option value="">None</option>
             {players
               .filter((_, index) => index !== wolfIndex)
               .map((player, index) => (
@@ -84,6 +90,14 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange})
             disabled={wolfChoice.partner || wolfChoice.blindWolf}
           />
         </label>
+      </div>
+      <div>
+        <h3>Tee Order</h3>
+        <ul>
+          {teeOrder.map((player, index) => (
+            <li key={index}>{player}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );
