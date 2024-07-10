@@ -6,7 +6,8 @@ const initialState = {
   players: [],
   currentHole: 1,
   gameStarted: false,
-  wolfChoices: {}
+  wolfChoices: {},
+  strokes: {}
 };
 
 
@@ -55,12 +56,27 @@ function App() {
     }));
   };
 
+  const handleStrokeChange = (player, strokes) => {
+    setState((prevState) => ({
+      ...prevState,
+      strokes: {
+        ...prevState.strokes,
+        [state.currentHole]: {
+          ...prevState.strokes[state.currentHole],
+          [player]: strokes
+        }
+      }
+    }));
+  };
+
   const handleHoleChange = (delta) => {
     setState((prevState) => ({
       ...prevState,
       currentHole: Math.max(1, Math.min(18, prevState.currentHole + delta))
     }));
   };
+
+  
 
   useEffect(() => {
     if (state.currentHole > 1 && state.currentHole < 17) {
@@ -75,6 +91,9 @@ function App() {
     }
   }, [state.currentHole]);
 
+  const getCurrentHoleStrokes = () => {
+    return state.strokes[state.currentHole] || {};
+  };
 
 
   return(
@@ -111,7 +130,19 @@ function App() {
             handleWolfChoiceChange={handleWolfChoiceChange}
             teeOrder={teeOrder}
           />
-          {/* Add stroke inputs and scorecard components here */}
+          <div className="scores">
+            <h3>Enter Scores for Hole {state.currentHole}</h3>
+            {teeOrder.map((player, index) => (
+              <div key={player} className="score-entry">
+                <span>{player}:</span>
+                <input
+                  type="number"
+                  value={getCurrentHoleStrokes()[player] || ''}
+                  onChange={(e) => handleStrokeChange(player, parseInt(e.target.value) || '')}
+                />
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>
