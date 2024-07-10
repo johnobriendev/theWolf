@@ -1,32 +1,10 @@
 import React from "react";
 
-const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange}) => {
+const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, teeOrder}) => {
 
   const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, loneWolf: true };
+  const wolf = teeOrder[teeOrder.length - 1];
 
-
-  const getCurrentWolf = () => {
-    if (currentHole === 17 || currentHole === 18) {
-      // Sort players by points for holes 17 and 18
-      const sortedByPoints = Object.entries(players)
-        .map(([idx, _]) => ({ idx, points: Object.values(wolfChoices).reduce((acc, c) => acc + (c[idx] || 0), 0) }))
-        .sort((a, b) => a.points - b.points);
-      return sortedByPoints[0]?.idx; // Get player with the lowest points
-    } else {
-      const holeOrder = (currentHole - 1) % players.length;
-      return (holeOrder + players.length - 1) % players.length; // Calculate the wolf based on the order
-    }
-  };
-
-  const getTeeOrder = () => {
-    const holeOrder = (currentHole - 1) % players.length;
-    const teeOrder = players.slice(holeOrder).concat(players.slice(0, holeOrder));
-    return teeOrder;
-  };
-
-  const wolfIndex = getCurrentWolf();
-  const wolf = players[wolfIndex];
-  const teeOrder = getTeeOrder();
 
   // Handle wolf choice changes
   const handleChange = (e) => {
@@ -58,7 +36,7 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange})
             disabled={wolfChoice.blindWolf || wolfChoice.loneWolf}
           >
             {players
-              .filter((_, index) => index !== wolfIndex)
+              .filter((player) => player!== wolf)
               .map((player, index) => (
                 <option key={index} value={player}>
                   {player}
