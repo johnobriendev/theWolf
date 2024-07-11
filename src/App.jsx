@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react"
-import PlayerInput from "./components/PlayerInput"
-import WolfChoice from "./components/WolfChoice"
+import React, { useState, useEffect } from "react";
+import PlayerInput from "./components/PlayerInput";
+import WolfChoice from "./components/WolfChoice";
+import Scorecard from "./components/Scorecard";
 
 const initialState = {
   players: [],
@@ -143,6 +144,10 @@ function App() {
               </div>
             ))}
           </div>
+          <Scorecard
+            players={state.players}
+            strokes={state.strokes}
+          />
         </>
       )}
     </div>
