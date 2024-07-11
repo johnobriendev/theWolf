@@ -8,7 +8,19 @@ const initialState = {
   currentHole: 1,
   gameStarted: false,
   wolfChoices: {},
-  strokes: {}
+  strokes: {},
+  points:{},
+  rules: {
+    blindWolfWin: { wolf: 6, opponents: 0 },
+    blindWolfLose: { wolf: 0, opponents: 2 },
+    blindWolfTie: { wolf: 0, opponents: 0 },
+    loneWolfWin: { wolf: 3, opponents: 0 },
+    loneWolfLose: { wolf: 0, opponents: 1 },
+    loneWolfTie: { wolf: 0, opponents: 0 },
+    wolfWithPartnerWin: { wolf: 1, opponents: 0 },
+    wolfWithPartnerLose: { wolf: 0, opponents: 2 },
+    wolfWithPartnerTie: { wolf: 0, opponents: 0 },
+  },
 };
 
 
