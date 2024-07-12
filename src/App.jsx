@@ -24,13 +24,63 @@ const initialState = {
     wolfWithPartnerTie: { wolf: 0, opponents: 0 },
   },
 };
+const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
+  const lowestWolfScore = Math.min(...wolfScores);
+  const lowestOpponentScore = Math.min(...opponentScores);
+
+  console.log(`Calculating points for choice: ${wolfChoice}`);
+  console.log(`Wolf Scores: ${wolfScores}, Opponent Scores: ${opponentScores}`);
+  console.log(`Lowest Wolf Score: ${lowestWolfScore}, Lowest Opponent Score: ${lowestOpponentScore}`);
+
+  let wolfPoints = 0;
+  let opponentPoints = 0;
+
+  if (wolfChoice === 'blindWolf') {
+    if (lowestWolfScore < lowestOpponentScore) {
+      wolfPoints = rules.blindWolfWin.wolf;
+      opponentPoints = rules.blindWolfWin.opponents;
+    } else if (lowestWolfScore > lowestOpponentScore) {
+      wolfPoints = rules.blindWolfLose.wolf;
+      opponentPoints = rules.blindWolfLose.opponents;
+    } else {
+      wolfPoints = rules.blindWolfTie.wolf;
+      opponentPoints = rules.blindWolfTie.opponents;
+    }
+  } else if (wolfChoice === 'loneWolf') {
+    if (lowestWolfScore < lowestOpponentScore) {
+      wolfPoints = rules.loneWolfWin.wolf;
+      opponentPoints = rules.loneWolfWin.opponents;
+    } else if (lowestWolfScore > lowestOpponentScore) {
+      wolfPoints = rules.loneWolfLose.wolf;
+      opponentPoints = rules.loneWolfLose.opponents;
+    } else {
+      wolfPoints = rules.loneWolfTie.wolf;
+      opponentPoints = rules.loneWolfTie.opponents;
+    }
+  } else if (wolfChoice === 'wolfWithPartner') {
+    if (lowestWolfScore < lowestOpponentScore) {
+      wolfPoints = rules.wolfWithPartnerWin.wolf;
+      opponentPoints = rules.wolfWithPartnerWin.opponents;
+    } else if (lowestWolfScore > lowestOpponentScore) {
+      wolfPoints = rules.wolfWithPartnerLose.wolf;
+      opponentPoints = rules.wolfWithPartnerLose.opponents;
+    } else {
+      wolfPoints = rules.wolfWithPartnerTie.wolf;
+      opponentPoints = rules.wolfWithPartnerTie.opponents;
+    }
+  }
+
+  console.log(`Calculated Points - Wolf: ${wolfPoints}, Opponents: ${opponentPoints}`);
 
 
+  return { wolfPoints, opponentPoints };
+};
 
 function App() {
   const [state, setState] = useState(initialState);
   const [newPlayer, setNewPlayer] = useState('');
   const [teeOrder, setTeeOrder] = useState([]);
+  const [teams, setTeams] = useState({});
 
 
   const handlePlayerNameChange = (e) => setNewPlayer(e.target.value);
@@ -54,20 +104,52 @@ function App() {
   };
 
   const handleStartGame = () => {
+    const initialTeeOrder = [...state.players];
+    const calculatedTeeOrder = [];
+    
+    for (let i = 0; i < 16; i++) {
+      calculatedTeeOrder.push([...initialTeeOrder]);
+      const lastPlayer = initialTeeOrder.pop();
+      initialTeeOrder.unshift(lastPlayer);
+    }
+    setTeeOrder(calculatedTeeOrder);
     setState((prevState) => ({
       ...prevState,
       gameStarted: true
     }));
-    setTeeOrder(state.players);
+   
   };
 
+  // const handleWolfChoiceChange = (hole, choice) => {
+  //   setState((prevState) => ({
+  //     ...prevState,
+  //     wolfChoices: {
+  //       ...prevState.wolfChoices,
+  //       [hole]: choice
+  //     }
+  //   }));
+  // };
+
   const handleWolfChoiceChange = (hole, choice) => {
-    setState((prevState) => ({
-      ...prevState,
-      wolfChoices: {
-        ...prevState.wolfChoices,
-        [hole]: choice
+    setState((prevState) => {
+      const currentChoice = prevState.wolfChoices[hole];
+      if (currentChoice && currentChoice.choice === choice.choice) {
+        return prevState; // No change, avoid state update
       }
+      return {
+        ...prevState,
+        wolfChoices: {
+          ...prevState.wolfChoices,
+          [hole]: choice
+        }
+      };
+    });
+  };
+
+  const handleTeamsUpdate = (hole, updatedTeams) => {
+    setTeams((prevTeams) => ({
+      ...prevTeams,
+      [hole]: updatedTeams
     }));
   };
 
@@ -91,12 +173,6 @@ function App() {
     }));
   };
   
-  const handleRuleChange = (newRules) => {
-    setState((prevState) => ({
-      ...prevState,
-      rules: newRules
-    }));
-  };
 
   const handlePointsChange = (hole, playerIndex, points) => {
     setState((prevState) => {
@@ -109,74 +185,60 @@ function App() {
     });
   };
 
-  
-
+  //calculates the TeeOrder for the last two holes based on points
   useEffect(() => {
-    if (state.currentHole > 1 && state.currentHole < 17) {
-      setTeeOrder((prevOrder) => {
-        const newOrder = [...prevOrder];
-        const lastPlayer = newOrder.pop();
-        newOrder.unshift(lastPlayer);
-        return newOrder;
+    if (state.currentHole > 16) {
+      const sortedPlayers = [...state.players].sort((a, b) => {
+        const pointsA = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(a)] || 0), 0);
+        const pointsB = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(b)] || 0), 0);
+        return pointsB - pointsA;
       });
-    } else if (state.currentHole === 1) {
-      setTeeOrder(state.players);
+      setTeeOrder([sortedPlayers]);
     }
-  }, [state.currentHole]);
+  }, [state.currentHole, state.points, state.players]);
+
+ 
 
   const getCurrentHoleStrokes = () => {
     return state.strokes[state.currentHole] || {};
   };
 
+  const handleCalculatePoints = () => {
+    const currentChoice = state.wolfChoices[state.currentHole];
+    if (!currentChoice) {
+      console.error(`No wolf choice found for hole ${state.currentHole}`);
+      return;
+    }
+    const wolf = teeOrder[state.currentHole - 1]?.[0]; // Assuming wolf is the first in the list
+    const wolfScores = [];
+    const opponentScores = [];
 
-  useEffect(() => {
-    const calculatePoints = (wolfChoice, wolfScore, opponentScores) => {
-      const { rules } = state;
-      let points = Array(state.players.length).fill(0);
+    if (!wolf) return;
 
-      if (wolfChoice) {
-        const wolfIndex = state.players.indexOf(wolfChoice);
-        const minOpponentScore = Math.min(...opponentScores.map(([, score]) => score));
-        const tie = wolfScore === minOpponentScore;
-
-        if (wolfChoice === 'blindWolf') {
-          // Blind Wolf logic
-        } else if (wolfChoice === state.players[state.currentHole % state.players.length]) {
-          // Lone Wolf
-          const { wolf, opponents: oppPoints } = tie ? rules.loneWolfTie : wolfScore < minOpponentScore ? rules.loneWolfWin : rules.loneWolfLose;
-          points[wolfIndex] = wolf;
-          opponentScores.forEach(([player, score], i) => {
-            if (score === minOpponentScore || !tie) {
-              points[state.players.indexOf(player)] = oppPoints;
-            }
-          });
-        } else {
-          // Wolf with Partner logic
-        }
-      }
-
-      return points;
-    };
-
-    const currentHoleStrokes = state.strokes[state.currentHole];
-    if (currentHoleStrokes) {
-      const wolfChoice = state.wolfChoices[state.currentHole];
-      if (wolfChoice) {
-        const wolfScore = currentHoleStrokes[wolfChoice];
-        const opponentScores = Object.entries(currentHoleStrokes).filter(([player]) => player !== wolfChoice);
-        const points = calculatePoints(wolfChoice, wolfScore, opponentScores);
-
-        setState((prevState) => ({
-          ...prevState,
-          points: {
-            ...prevState.points,
-            [state.currentHole]: points
-          }
-        }));
+    for (let player of state.players) {
+      if (player === wolf) {
+        wolfScores.push(state.strokes[state.currentHole][player] || 0);
+      } else {
+        opponentScores.push(state.strokes[state.currentHole][player] || 0);
       }
     }
-  }, [state.strokes, state.wolfChoices, state.currentHole, state.players, state.rules]);
 
+    const { wolfPoints, opponentPoints } = calculatePoints(currentChoice.choice, wolfScores, opponentScores, state.rules);
+
+    // Update points
+    setState((prevState) => ({
+      ...prevState,
+      points: {
+        ...prevState.points,
+        [state.currentHole]: {
+          wolfPoints,
+          opponentPoints
+        }
+      }
+    }));
+  };
+
+  
 
   return(
     <div className="container">
@@ -186,6 +248,8 @@ function App() {
             newPlayer={newPlayer}
             handlePlayerNameChange={handlePlayerNameChange}
             handleAddPlayer={handleAddPlayer}
+            handleDeletePlayer={handleDeletePlayer}
+            handleStartGame={handleStartGame}
           />
           <ul>
             {state.players.map((player, index) => (
@@ -210,11 +274,15 @@ function App() {
             players={state.players}
             wolfChoices={state.wolfChoices}
             handleWolfChoiceChange={handleWolfChoiceChange}
-            teeOrder={teeOrder}
+            // teeOrder={teeOrder}
+            teeOrder={teeOrder[state.currentHole - 1] || state.players}
+            handleTeamsUpdate={handleTeamsUpdate}
+            strokes={state.strokes[state.currentHole] || {}}
+            onStrokeChange={handleStrokeChange}
           />
           <div className="scores">
             <h3>Enter Scores for Hole {state.currentHole}</h3>
-            {teeOrder.map((player, index) => (
+            {teeOrder[state.currentHole - 1] && teeOrder[state.currentHole - 1].map((player, index) => (
               <div key={player} className="score-entry">
                 <span>{player}:</span>
                 <input
@@ -225,6 +293,7 @@ function App() {
               </div>
             ))}
           </div>
+          <button onClick={handleCalculatePoints}>Calculate Points</button>
           <Scorecard
             players={state.players}
             strokes={state.strokes}

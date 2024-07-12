@@ -1,10 +1,9 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
-const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, teeOrder}) => {
-  const [teams, setTeams] = useState({ wolfTeam: [], opponents: [] });
-
-  const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, choice: 'loneWolf' };
+const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, teeOrder, }) => {
+  
+  const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, choice: '' };
   const wolf = teeOrder[teeOrder.length - 1];
 
 
@@ -14,9 +13,21 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
     handleWolfChoiceChange(currentHole, { choice: value });
   };
 
+  // // Separate teams whenever the wolf choice changes
+  // useEffect(() => {
+  //   let wolfTeam = [wolf];
+  //   let opponents = players.filter(player => player !== wolf);
 
-  // Function to separate players into teams
-  const separateTeams = () => {
+  //   if (wolfChoice.choice !== 'loneWolf' && wolfChoice.choice !== 'blindWolf') {
+  //     const partner = wolfChoice.choice;
+  //     wolfTeam.push(partner);
+  //     opponents = players.filter(player => player !== wolf && player !== partner);
+  //   }
+
+  //   setTeams({ wolfTeam, opponents });
+  // }, [wolf, players, wolfChoice]);
+
+  const teams = useMemo(() => {
     let wolfTeam = [wolf];
     let opponents = players.filter(player => player !== wolf);
 
@@ -26,13 +37,8 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
       opponents = players.filter(player => player !== wolf && player !== partner);
     }
 
-    setTeams({ wolfTeam, opponents });
-  };
-
-  // Separate teams whenever the wolf choice changes
-  useEffect(() => {
-    separateTeams();
-  }, [wolfChoice]);
+    return { wolfTeam, opponents };
+  }, [wolf, players, wolfChoice.choice]);
 
 
 
