@@ -79,8 +79,9 @@ const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
 function App() {
   const [state, setState] = useState(initialState);
   const [newPlayer, setNewPlayer] = useState('');
+  // const [originalTeeOrder, setOriginalTeeOrder] = useState([]);
+  // const [lastTwoHolesTeeOrder, setLastTwoHolesTeeOrder] = useState([]);
   const [teeOrder, setTeeOrder] = useState([]);
-  const [teams, setTeams] = useState({});
 
 
   const handlePlayerNameChange = (e) => setNewPlayer(e.target.value);
@@ -119,15 +120,29 @@ function App() {
     }));
    
   };
+  // const calculateTotalPoints = (player) => {
+  //   return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
+  // };
 
-  // const handleWolfChoiceChange = (hole, choice) => {
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     wolfChoices: {
-  //       ...prevState.wolfChoices,
-  //       [hole]: choice
+  // const handleHoleChange = (delta) => {
+  //   setState((prevState) => {
+  //     const newHole = Math.max(1, Math.min(18, prevState.currentHole + delta));
+      
+  //     // If we're moving to hole 17, recalculate the tee order based on points
+  //     if (newHole === 17 && prevState.currentHole === 16) {
+  //       const sortedPlayers = [...state.players].sort((a, b) => {
+  //         return calculateTotalPoints(b) - calculateTotalPoints(a);
+  //       });
+  //       setTeeOrder(prevOrder => {
+  //         const newOrder = [...prevOrder];
+  //         newOrder[16] = sortedPlayers;
+  //         newOrder[17] = sortedPlayers;
+  //         return newOrder;
+  //       });
   //     }
-  //   }));
+      
+  //     return { ...prevState, currentHole: newHole };
+  //   });
   // };
 
   const handleWolfChoiceChange = (hole, choice) => {
@@ -185,17 +200,60 @@ function App() {
     });
   };
 
-  //calculates the TeeOrder for the last two holes based on points
   useEffect(() => {
     if (state.currentHole > 16) {
+      const calculateTotalPoints = (player) => {
+        return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
+      };
+  
       const sortedPlayers = [...state.players].sort((a, b) => {
-        const pointsA = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(a)] || 0), 0);
-        const pointsB = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(b)] || 0), 0);
-        return pointsB - pointsA;
+        return calculateTotalPoints(b) - calculateTotalPoints(a);
       });
-      setTeeOrder([sortedPlayers]);
+  
+      setTeeOrder((prevTeeOrder) => {
+        const newTeeOrder = [...prevTeeOrder];
+        newTeeOrder[16] = sortedPlayers;
+        newTeeOrder[17] = sortedPlayers;
+        return newTeeOrder;
+      });
     }
   }, [state.currentHole, state.points, state.players]);
+
+  // useEffect(() => {
+  //   if (state.currentHole >= 17) {
+  //     const calculateTotalPoints = (player) => {
+  //       return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
+  //     };
+  
+  //     const sortedPlayers = [...state.players].sort((a, b) => {
+  //       return calculateTotalPoints(b) - calculateTotalPoints(a);
+  //     });
+      
+  //     setLastTwoHolesTeeOrder([sortedPlayers, sortedPlayers]);
+
+   
+  //   }
+  // }, [state.currentHole, state.points, state.players]);
+
+  const getCurrentTeeOrder = () => {
+    if (state.currentHole <= 16) {
+      return originalTeeOrder[state.currentHole - 1] || state.players;
+    } else {
+      return lastTwoHolesTeeOrder[state.currentHole - 17] || state.players;
+    }
+  };
+
+  // //calculates the TeeOrder for the last two holes based on points
+  // useEffect(() => {
+  //   if (state.currentHole > 16) {
+  //     const sortedPlayers = [...state.players].sort((a, b) => {
+  //       const pointsA = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(a)] || 0), 0);
+  //       const pointsB = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(b)] || 0), 0);
+  //       return pointsB - pointsA;
+  //     });
+  //     setTeeOrder([sortedPlayers]);
+  //   }
+  // }, [state.currentHole, state.points, state.players]);
 
  
 
@@ -210,7 +268,7 @@ function App() {
       return;
     }
 
-    const currentTeeOrder = teeOrder[state.currentHole - 1];
+    const currentTeeOrder = teeOrder[state.currentHole - 1] || state.players;
     const wolf = currentTeeOrder[currentTeeOrder.length - 1]; // wolf is the last in the list
     const partner = currentChoice.choice !== 'loneWolf' && currentChoice.choice !== 'blindWolf' ? currentChoice.choice : null;
 
@@ -288,6 +346,7 @@ function App() {
             handleWolfChoiceChange={handleWolfChoiceChange}
             // teeOrder={teeOrder}
             teeOrder={teeOrder[state.currentHole - 1] || state.players}
+            // teeOrder={getCurrentTeeOrder()}
             handleTeamsUpdate={handleTeamsUpdate}
             strokes={state.strokes[state.currentHole] || {}}
             onStrokeChange={handleStrokeChange}

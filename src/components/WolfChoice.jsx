@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, teeOrder, }) => {
   
   const wolfChoice = wolfChoices[currentHole] || { partner: '', blindWolf: false, choice: '' };
-  const wolf = teeOrder[teeOrder.length - 1];
+  //const wolf = teeOrder[teeOrder.length - 1];
+  const wolf = teeOrder?.[teeOrder.length - 1] || players[players.length - 1];
 
 
   // Handle wolf choice changes
@@ -74,7 +75,7 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
       <div>
         <h3>Tee Order</h3>
         <ul>
-          {teeOrder.map((player, index) => (
+          {(teeOrder || players).map((player, index) => (
             <li key={index}>{player}</li>
           ))}
         </ul>
