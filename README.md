@@ -1,6 +1,6 @@
-# Wolf Game Tracker
+# Wolf
 
-Wolf Game Tracker is a React-based application designed to help you keep track of scores and points for the golf game "Wolf." The app allows you to input player names, record strokes per hole, and calculate points based on various Wolf game outcomes. The app features a toggle to switch between viewing the scorecard and the pointscard.
+Wolf is a React-based application designed to help you keep track of scores and points for the golf game "Wolf." The app allows you to input player names, record strokes per hole, and calculate points based on various Wolf game outcomes. The app features a toggle to switch between viewing the scorecard and the pointscard.
 
 [LiveSite](https://thewolfgolf.netlify.app/)
 
