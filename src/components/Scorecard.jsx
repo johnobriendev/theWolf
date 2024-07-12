@@ -20,12 +20,11 @@ const Scorecard = ({ players, strokes }) => {
 
   return (
     <div className="scorecard">
-      <h3>Scorecard</h3>
+      <h3 className='font-bold text-2xl'>Scorecard</h3>
 
       {/* Table for Holes 1-9 */}
       <div className="score-table">
-        <h4>Front Nine</h4>
-        <table>
+        <table className='w-full'>
           <thead>
             <tr>
               <th>Player</th>
@@ -53,8 +52,7 @@ const Scorecard = ({ players, strokes }) => {
 
       {/* Table for Holes 10-18 */}
       <div className="score-table">
-        <h4>Back Nine</h4>
-        <table>
+        <table className='w-full'>
           <thead>
             <tr>
               <th>Player</th>

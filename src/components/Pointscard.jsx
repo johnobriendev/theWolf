@@ -20,12 +20,11 @@ const Pointscard = ({ players, points }) => {
 
   return (
     <div className="pointscard">
-      <h2>Pointscard</h2>
+      <h2 className='font-bold text-2xl'>Pointscard</h2>
 
       {/* Table for Holes 1-9 */}
       <div className="points-table">
-        <h4>Front Nine</h4>
-        <table>
+        <table className='w-full'>
           <thead>
             <tr>
               <th>Player</th>
@@ -53,8 +52,7 @@ const Pointscard = ({ players, points }) => {
 
       {/* Table for Holes 10-18 */}
       <div className="points-table">
-        <h4>Back Nine</h4>
-        <table>
+        <table className='w-full'>
           <thead>
             <tr>
               <th>Player</th>

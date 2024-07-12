@@ -82,6 +82,7 @@ function App() {
   // const [originalTeeOrder, setOriginalTeeOrder] = useState([]);
   // const [lastTwoHolesTeeOrder, setLastTwoHolesTeeOrder] = useState([]);
   const [teeOrder, setTeeOrder] = useState([]);
+  const [showScorecard, setShowScorecard] = useState(true);
 
 
   const handlePlayerNameChange = (e) => setNewPlayer(e.target.value);
@@ -120,30 +121,6 @@ function App() {
     }));
    
   };
-  // const calculateTotalPoints = (player) => {
-  //   return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
-  // };
-
-  // const handleHoleChange = (delta) => {
-  //   setState((prevState) => {
-  //     const newHole = Math.max(1, Math.min(18, prevState.currentHole + delta));
-      
-  //     // If we're moving to hole 17, recalculate the tee order based on points
-  //     if (newHole === 17 && prevState.currentHole === 16) {
-  //       const sortedPlayers = [...state.players].sort((a, b) => {
-  //         return calculateTotalPoints(b) - calculateTotalPoints(a);
-  //       });
-  //       setTeeOrder(prevOrder => {
-  //         const newOrder = [...prevOrder];
-  //         newOrder[16] = sortedPlayers;
-  //         newOrder[17] = sortedPlayers;
-  //         return newOrder;
-  //       });
-  //     }
-      
-  //     return { ...prevState, currentHole: newHole };
-  //   });
-  // };
 
   const handleWolfChoiceChange = (hole, choice) => {
     setState((prevState) => {
@@ -223,62 +200,8 @@ function App() {
     }
   }, [state.currentHole, state.points, state.players]);
 
-  // useEffect(() => {
-  //   if (state.currentHole > 16) {
-  //     const calculateTotalPoints = (player) => {
-  //       return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
-  //     };
-  
-  //     const sortedPlayers = [...state.players].sort((a, b) => {
-  //       return calculateTotalPoints(b) - calculateTotalPoints(a);
-  //     });
-  
-  //     setTeeOrder((prevTeeOrder) => {
-  //       const newTeeOrder = [...prevTeeOrder];
-  //       newTeeOrder[16] = sortedPlayers;
-  //       newTeeOrder[17] = sortedPlayers;
-  //       return newTeeOrder;
-  //     });
-  //   }
-  // }, [state.currentHole, state.points, state.players]);
 
-  // useEffect(() => {
-  //   if (state.currentHole >= 17) {
-  //     const calculateTotalPoints = (player) => {
-  //       return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
-  //     };
-  
-  //     const sortedPlayers = [...state.players].sort((a, b) => {
-  //       return calculateTotalPoints(b) - calculateTotalPoints(a);
-  //     });
-      
-  //     setLastTwoHolesTeeOrder([sortedPlayers, sortedPlayers]);
 
-   
-  //   }
-  // }, [state.currentHole, state.points, state.players]);
-
-  const getCurrentTeeOrder = () => {
-    if (state.currentHole <= 16) {
-      return originalTeeOrder[state.currentHole - 1] || state.players;
-    } else {
-      return lastTwoHolesTeeOrder[state.currentHole - 17] || state.players;
-    }
-  };
-
-  // //calculates the TeeOrder for the last two holes based on points
-  // useEffect(() => {
-  //   if (state.currentHole > 16) {
-  //     const sortedPlayers = [...state.players].sort((a, b) => {
-  //       const pointsA = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(a)] || 0), 0);
-  //       const pointsB = Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[state.players.indexOf(b)] || 0), 0);
-  //       return pointsB - pointsA;
-  //     });
-  //     setTeeOrder([sortedPlayers]);
-  //   }
-  // }, [state.currentHole, state.points, state.players]);
-
- 
 
   const getCurrentHoleStrokes = () => {
     return state.strokes[state.currentHole] || {};
@@ -331,6 +254,10 @@ function App() {
     });
   };
 
+
+  const toggleScorePointCard = () => {
+    setShowScorecard((prevShowScorecard) => !prevShowScorecard);
+  };
   
 
   return(
@@ -373,8 +300,8 @@ function App() {
             strokes={state.strokes[state.currentHole] || {}}
             onStrokeChange={handleStrokeChange}
           />
-          <h3 className="text-lg font-semibold my-2">Enter Scores for Hole {state.currentHole}</h3>
-          <div className="flex gap-8 items-center">
+          {/* <h3 className="text-lg font-semibold my-2">Enter Scores for Hole {state.currentHole}</h3> */}
+          <div className="flex gap-8 items-center mt-4">
             <div className=" flex flex-col gap-2">
               {teeOrder[state.currentHole - 1] && teeOrder[state.currentHole - 1].map((player, index) => (
                 <div key={player} className="flex items-center justify-between gap-5">
@@ -402,21 +329,50 @@ function App() {
                 </div>
               ))}
             </div>
-            <button className="border border-black rounded px-2 h-20" onClick={handleCalculatePoints}>Calculate Points</button>
+            <div className="flex flex-col justify-between items-center gap-2">
+              <button className="border border-black rounded px-2 h-20" onClick={handleCalculatePoints}>Calculate Points</button>
+              <button
+                className="bg-slate-500 text-white h-20 px-2 rounded"
+                onClick={toggleScorePointCard}
+              >
+                {showScorecard ? 'Show Pointscard' : 'Show Scorecard'}
+              </button>
+             
+            </div>
+            
           </div>
          
-          <Scorecard
+          {showScorecard ? (
+            <Scorecard
+              players={state.players}
+              strokes={state.strokes}
+              currentHole={state.currentHole}
+              onStrokeChange={handleStrokeChange}
+            />
+          ) : (
+            <Pointscard
+              players={state.players}
+              points={state.points}
+              currentHole={state.currentHole}
+              onPointsChange={handlePointsChange}
+            />
+          )}
+
+
+          {/* <Scorecard
             players={state.players}
             strokes={state.strokes}
           />
           <Pointscard
             players={state.players}
             points={state.points}
-          />
-          <div className="w-full flex items-center justify-between">
-            <button className="border border-black rounded px-2 py-1" onClick={() => handleHoleChange(-1)} disabled={state.currentHole === 1}>Previous Hole</button>
-            <span>Hole {state.currentHole}</span>
-            <button className="border border-black rounded px-2 py-1" onClick={() => handleHoleChange(1)} disabled={state.currentHole === 18}>Next Hole</button>
+          /> */}
+
+
+          <div className="w-full flex items-center justify-between mt-6">
+            <button className="border border-black rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(-1)} disabled={state.currentHole === 1}>Previous Hole</button>
+            <span className="mx-2 text-center">Hole {state.currentHole}</span>
+            <button className="border border-black rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(1)} disabled={state.currentHole === 18}>Next Hole</button>
           </div>
         </div>
       )}
