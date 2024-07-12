@@ -261,7 +261,7 @@ function App() {
   
 
   return(
-    <div className="py-4">
+    <div className="py-1 h-screen">
       {!state.gameStarted ? (
         <div className="p-4 flex flex-col justify-center items-center gap-16 ">
           <div className="flex flex-col items-center gap-4">
@@ -287,7 +287,7 @@ function App() {
           )}
         </div>
       ) : (
-        <div className="px-12">
+        <div className="px-12 h-full">
           <WolfChoice
             currentHole={state.currentHole}
             players={state.players}
