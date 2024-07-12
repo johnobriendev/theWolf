@@ -3,7 +3,7 @@ import React from "react";
 const PlayerInput = ({newPlayer, handlePlayerNameChange, handleAddPlayer}) =>(
   <div className="flex justify-between items-center gap-5">
     <input 
-    className="border border-black p-1 rounded"
+    className="border border-gray-300 p-1 rounded"
     type="text"
     value={newPlayer}
     onChange={handlePlayerNameChange}
