@@ -57,7 +57,7 @@ const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
       wolfPoints = rules.loneWolfTie.wolf;
       opponentPoints = rules.loneWolfTie.opponents;
     }
-  } else if (wolfChoice === 'wolfWithPartner') {
+  } else { //if (wolfChoice === 'wolfWithPartner') {
     if (lowestWolfScore < lowestOpponentScore) {
       wolfPoints = rules.wolfWithPartnerWin.wolf;
       opponentPoints = rules.wolfWithPartnerWin.opponents;
@@ -209,33 +209,45 @@ function App() {
       console.error(`No wolf choice found for hole ${state.currentHole}`);
       return;
     }
-    const wolf = teeOrder[state.currentHole - 1]?.[0]; // Assuming wolf is the first in the list
-    const wolfScores = [];
-    const opponentScores = [];
 
-    if (!wolf) return;
+    const currentTeeOrder = teeOrder[state.currentHole - 1];
+    const wolf = currentTeeOrder[currentTeeOrder.length - 1]; // wolf is the last in the list
+    const partner = currentChoice.choice !== 'loneWolf' && currentChoice.choice !== 'blindWolf' ? currentChoice.choice : null;
 
-    for (let player of state.players) {
-      if (player === wolf) {
-        wolfScores.push(state.strokes[state.currentHole][player] || 0);
-      } else {
-        opponentScores.push(state.strokes[state.currentHole][player] || 0);
-      }
-    }
+    const wolfTeam = partner ? [wolf, partner] : [wolf];
+    const opponents = state.players.filter(player => !wolfTeam.includes(player));
+
+    const wolfScores = wolfTeam.map(player => state.strokes[state.currentHole][player] || 0);
+    const opponentScores = opponents.map(player => state.strokes[state.currentHole][player] || 0);
+
+    console.log(`Wolf Team: ${wolfTeam.join(', ')}`);
+    console.log(`Opponents: ${opponents.join(', ')}`);
+    console.log(`Wolf Scores: ${wolfScores.join(', ')}`);
+    console.log(`Opponent Scores: ${opponentScores.join(', ')}`);
+
 
     const { wolfPoints, opponentPoints } = calculatePoints(currentChoice.choice, wolfScores, opponentScores, state.rules);
 
-    // Update points
-    setState((prevState) => ({
-      ...prevState,
-      points: {
-        ...prevState.points,
-        [state.currentHole]: {
-          wolfPoints,
-          opponentPoints
-        }
+      // Update points
+    setState((prevState) => {
+      const newPoints = { ...prevState.points };
+      if (!newPoints[state.currentHole]) {
+        newPoints[state.currentHole] = {};
       }
-    }));
+      
+      wolfTeam.forEach(player => {
+        newPoints[state.currentHole][player] = wolfPoints;
+      });
+      
+      opponents.forEach(player => {
+        newPoints[state.currentHole][player] = opponentPoints;
+      });
+
+      return {
+        ...prevState,
+        points: newPoints
+      };
+    });
   };
 
   

@@ -13,19 +13,6 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
     handleWolfChoiceChange(currentHole, { choice: value });
   };
 
-  // // Separate teams whenever the wolf choice changes
-  // useEffect(() => {
-  //   let wolfTeam = [wolf];
-  //   let opponents = players.filter(player => player !== wolf);
-
-  //   if (wolfChoice.choice !== 'loneWolf' && wolfChoice.choice !== 'blindWolf') {
-  //     const partner = wolfChoice.choice;
-  //     wolfTeam.push(partner);
-  //     opponents = players.filter(player => player !== wolf && player !== partner);
-  //   }
-
-  //   setTeams({ wolfTeam, opponents });
-  // }, [wolf, players, wolfChoice]);
 
   const teams = useMemo(() => {
     let wolfTeam = [wolf];
