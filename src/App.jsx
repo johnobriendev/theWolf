@@ -278,12 +278,12 @@ function App() {
           <ul className="flex flex-col gap-16">
             {state.players.map((player, index) => (
               <li className="flex justify-between items-center gap-24" key={index}>
-               <span className="text-xl">{player}</span> <button className="border border-black rounded py-1 px-2" onClick={() => handleDeletePlayer(index)}>Delete</button>
+               <span className="text-xl">{player}</span> <button className="border border-gray-300 rounded py-1 px-2" onClick={() => handleDeletePlayer(index)}>Delete</button>
               </li>
             ))}
           </ul>
           {state.players.length === 4 && (
-            <button className="border border-black rounded py-2 px-4 text-2xl my-6"  onClick={handleStartGame}>Start Game</button>
+            <button className="border border-gray-300 rounded py-2 px-4 text-2xl my-6"  onClick={handleStartGame}>Start Game</button>
           )}
         </div>
       ) : (
@@ -314,7 +314,7 @@ function App() {
                       -
                     </button>
                     <input
-                      className="border border-black rounded w-12 text-center"
+                      className="text-black rounded w-12 text-center"
                       type="number"
                       value={getCurrentHoleStrokes()[player] || ''}
                       onChange={(e) => handleStrokeChange(player, parseInt(e.target.value) || '')}
