@@ -261,7 +261,7 @@ function App() {
   
 
   return(
-    <div className="py-1 h-screen">
+    <div className="py-4 h-screen bg-slate-800 text-gray-300">
       {!state.gameStarted ? (
         <div className="p-4 flex flex-col justify-center items-center gap-16 ">
           <div className="flex flex-col items-center gap-4">
@@ -330,9 +330,9 @@ function App() {
               ))}
             </div>
             <div className="flex flex-col justify-between items-center gap-2">
-              <button className="border border-black rounded px-2 h-16" onClick={handleCalculatePoints}>Calculate Points</button>
+              <button className="border border-grey-300 rounded px-2 h-16" onClick={handleCalculatePoints}>Calculate Points</button>
               <button
-                className="bg-slate-500 text-white h-16 px-2 rounded"
+                className="bg-gray-300 text-sky-950 h-16 px-2 rounded"
                 onClick={toggleScorePointCard}
               >
                 {showScorecard ? 'Show Pointscard' : 'Show Scorecard'}
@@ -370,9 +370,9 @@ function App() {
 
 
           <div className="w-full flex items-center justify-between mt-6">
-            <button className="border border-black rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(-1)} disabled={state.currentHole === 1}>Previous Hole</button>
+            <button className="border border-gray-300 rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(-1)} disabled={state.currentHole === 1}>Previous Hole</button>
             <span className="mx-2 text-center">Hole {state.currentHole}</span>
-            <button className="border border-black rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(1)} disabled={state.currentHole === 18}>Next Hole</button>
+            <button className="border border-grey-300 rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(1)} disabled={state.currentHole === 18}>Next Hole</button>
           </div>
         </div>
       )}

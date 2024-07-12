@@ -20,11 +20,11 @@ const Scorecard = ({ players, strokes }) => {
 
   return (
     <div className="scorecard">
-      <h3 className='font-semibold text-xl'>Scorecard</h3>
+      <h3 className='font-semibold text-lg'>Scorecard</h3>
 
       {/* Table for Holes 1-9 */}
       <div className="score-table">
-        <table className='w-full'>
+        <table className='w-full text-sm'>
           <thead>
             <tr>
               <th>Player</th>
@@ -40,7 +40,7 @@ const Scorecard = ({ players, strokes }) => {
                 <td>{player}</td>
                 {frontNineHoles.map(hole => (
                   <td key={hole}>
-                    {strokes[hole] && strokes[hole][player]}
+                    {strokes[hole] && strokes[hole][player] !== undefined ? strokes[hole][player] : '-' }
                   </td>
                 ))}
                 <td>{frontNineTotals[playerIndex]}</td>
@@ -52,7 +52,7 @@ const Scorecard = ({ players, strokes }) => {
 
       {/* Table for Holes 10-18 */}
       <div className="score-table">
-        <table className='w-full'>
+        <table className='w-full text-sm'>
           <thead>
             <tr>
               <th>Player</th>
@@ -69,7 +69,7 @@ const Scorecard = ({ players, strokes }) => {
                 <td>{player}</td>
                 {backNineHoles.map(hole => (
                   <td key={hole}>
-                    {strokes[hole] && strokes[hole][player]}
+                    {strokes[hole] && strokes[hole][player] !== undefined ? strokes[hole][player] : '-'}
                   </td>
                 ))}
                 <td>{backNineTotals[playerIndex]}</td>
