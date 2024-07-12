@@ -31,74 +31,78 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
 
 
   return (
-    <div className="wolf-choice">
-      <h2>Hole {currentHole} Wolf Choice</h2>
+    <div className="">
       <div>
-        <p>Wolf: {wolf}</p>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="wolfChoice"
-              value="loneWolf"
-              checked={wolfChoice.choice === 'loneWolf'}
-              onChange={handleChange}
-            />
-            Lone Wolf
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="wolfChoice"
-              value="blindWolf"
-              checked={wolfChoice.choice === 'blindWolf'}
-              onChange={handleChange}
-            />
-            Blind Wolf
-          </label>
-          {players
-            .filter((player) => player !== wolf)
-            .map((player, index) => (
-              <label key={index}>
-                <input
-                  type="radio"
-                  name="wolfChoice"
-                  value={player}
-                  checked={wolfChoice.choice === player}
-                  onChange={handleChange}
-                />
-                Pick {player} as partner
-              </label>
-            ))}
+        <h1 className="text-2xl font-bold">Hole {currentHole} : {wolf} is the Wolf</h1>
+        <div className="flex justify-around mt-2 text-sm">
+          <div>
+            <h3 className="font-semibold">Order</h3>
+            <ul>
+              {(teeOrder || players).map((player, index) => (
+                <li key={index}>{player}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold">Wolf Team</h4>
+            <ul>
+              {teams.wolfTeam.map((player, index) => (
+                <li key={index}>{player}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold">Opponents</h4>
+            <ul>
+              {teams.opponents.map((player, index) => (
+                <li key={index}>{player}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="flex justify-between mt-4 text-sm">
+          <div className="flex flex-col gap-2">
+            <label>
+              <input
+                type="radio"
+                name="wolfChoice"
+                value="loneWolf"
+                checked={wolfChoice.choice === 'loneWolf'}
+                onChange={handleChange}
+              />
+              Lone Wolf
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="wolfChoice"
+                value="blindWolf"
+                checked={wolfChoice.choice === 'blindWolf'}
+                onChange={handleChange}
+              />
+              Blind Wolf
+            </label>
+          </div>
+          <div className="flex flex-col gap-2">
+            {players
+              .filter((player) => player !== wolf)
+              .map((player, index) => (
+                <label key={index}>
+                  <input
+                    type="radio"
+                    name="wolfChoice"
+                    value={player}
+                    checked={wolfChoice.choice === player}
+                    onChange={handleChange}
+                  />
+                  Pick {player} as partner
+                </label>
+              ))}
+          </div>
         </div>
       </div>
-      <div>
-        <h3>Tee Order</h3>
-        <ul>
-          {(teeOrder || players).map((player, index) => (
-            <li key={index}>{player}</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h3>Teams</h3>
-        <div>
-          <h4>Wolf Team</h4>
-          <ul>
-            {teams.wolfTeam.map((player, index) => (
-              <li key={index}>{player}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h4>Opponents</h4>
-          <ul>
-            {teams.opponents.map((player, index) => (
-              <li key={index}>{player}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      
+      
     </div>
   );
 }
