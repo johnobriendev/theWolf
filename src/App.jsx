@@ -202,22 +202,45 @@ function App() {
 
   useEffect(() => {
     if (state.currentHole > 16) {
-      const calculateTotalPoints = (player) => {
-        return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
+      const calculateTotalPoints = (player, upToHole) => {
+        return Object.entries(state.points)
+          .filter(([hole]) => parseInt(hole) <= upToHole)
+          .reduce((sum, [, holePoints]) => sum + (holePoints[player] || 0), 0);
       };
   
-      const sortedPlayers = [...state.players].sort((a, b) => {
-        return calculateTotalPoints(b) - calculateTotalPoints(a);
-      });
+      const sortPlayers = (upToHole) => {
+        return [...state.players].sort((a, b) => {
+          return calculateTotalPoints(b, upToHole) - calculateTotalPoints(a, upToHole);
+        });
+      };
   
       setTeeOrder((prevTeeOrder) => {
         const newTeeOrder = [...prevTeeOrder];
-        newTeeOrder[16] = sortedPlayers;
-        newTeeOrder[17] = sortedPlayers;
+        newTeeOrder[16] = sortPlayers(16); // Sort based on first 16 holes
+        newTeeOrder[17] = sortPlayers(17); // Sort based on first 17 holes
         return newTeeOrder;
       });
     }
   }, [state.currentHole, state.points, state.players]);
+
+  // useEffect(() => {
+  //   if (state.currentHole > 16) {
+  //     const calculateTotalPoints = (player) => {
+  //       return Object.values(state.points).reduce((sum, holePoints) => sum + (holePoints[player] || 0), 0);
+  //     };
+  
+  //     const sortedPlayers = [...state.players].sort((a, b) => {
+  //       return calculateTotalPoints(b) - calculateTotalPoints(a);
+  //     });
+  
+  //     setTeeOrder((prevTeeOrder) => {
+  //       const newTeeOrder = [...prevTeeOrder];
+  //       newTeeOrder[16] = sortedPlayers;
+  //       newTeeOrder[17] = sortedPlayers;
+  //       return newTeeOrder;
+  //     });
+  //   }
+  // }, [state.currentHole, state.points, state.players]);
 
   // useEffect(() => {
   //   if (state.currentHole >= 17) {
