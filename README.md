@@ -33,9 +33,10 @@ Wolf is a React-based application designed to help you keep track of scores and 
 
   ```bash
   npm install
-  Start the development server:
+  
 
   ```
+Start the development server:
   ```bash
   
   npm run dev
