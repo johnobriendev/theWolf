@@ -33,8 +33,8 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
   return (
     <div className="">
       <div>
-        <h1 className="text-2xl font-bold">Hole {currentHole} : {wolf} is the Wolf</h1>
-        <div className="flex justify-around mt-2 text-sm">
+        <h1 className="text-xl font-bold text-center">Hole {currentHole} : {wolf} is the Wolf</h1>
+        <div className="flex justify-around mt-1 text-sm">
           <div>
             <h3 className="font-semibold">Order</h3>
             <ul>

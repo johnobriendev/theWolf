@@ -20,7 +20,7 @@ const Scorecard = ({ players, strokes }) => {
 
   return (
     <div className="scorecard">
-      <h3 className='font-bold text-2xl'>Scorecard</h3>
+      <h3 className='font-semibold text-xl'>Scorecard</h3>
 
       {/* Table for Holes 1-9 */}
       <div className="score-table">

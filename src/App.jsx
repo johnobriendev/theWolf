@@ -261,7 +261,7 @@ function App() {
   
 
   return(
-    <div className="py-6">
+    <div className="py-4">
       {!state.gameStarted ? (
         <div className="p-4 flex flex-col justify-center items-center gap-16 ">
           <div className="flex flex-col items-center gap-4">
@@ -283,7 +283,7 @@ function App() {
             ))}
           </ul>
           {state.players.length === 4 && (
-            <button className="border border-black rounded py-2 px-4 text-2xl mt-8"  onClick={handleStartGame}>Start Game</button>
+            <button className="border border-black rounded py-2 px-4 text-2xl my-6"  onClick={handleStartGame}>Start Game</button>
           )}
         </div>
       ) : (
@@ -330,9 +330,9 @@ function App() {
               ))}
             </div>
             <div className="flex flex-col justify-between items-center gap-2">
-              <button className="border border-black rounded px-2 h-20" onClick={handleCalculatePoints}>Calculate Points</button>
+              <button className="border border-black rounded px-2 h-16" onClick={handleCalculatePoints}>Calculate Points</button>
               <button
-                className="bg-slate-500 text-white h-20 px-2 rounded"
+                className="bg-slate-500 text-white h-16 px-2 rounded"
                 onClick={toggleScorePointCard}
               >
                 {showScorecard ? 'Show Pointscard' : 'Show Scorecard'}

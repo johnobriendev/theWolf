@@ -20,7 +20,7 @@ const Pointscard = ({ players, points }) => {
 
   return (
     <div className="pointscard">
-      <h2 className='font-bold text-2xl'>Pointscard</h2>
+      <h2 className='font-semibold text-xl'>Pointscard</h2>
 
       {/* Table for Holes 1-9 */}
       <div className="points-table">
