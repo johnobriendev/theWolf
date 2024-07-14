@@ -266,7 +266,7 @@ function App() {
         <div className="p-4 flex flex-col justify-center items-center gap-16 ">
           <div className="flex flex-col items-center gap-4">
             <h1 className="text-bold text-3xl">Wolf</h1>
-            <h2>Enter player names in order</h2>
+            <h2>Enter 4 player names</h2>
           </div>
           <PlayerInput
             newPlayer={newPlayer}
