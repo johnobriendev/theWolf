@@ -31,12 +31,12 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
 
 
   return (
-    <div className="">
-      <div>
-        <h1 className="text-xl font-bold text-center">Hole {currentHole} : {wolf} is the Wolf</h1>
-        <div className="flex justify-around mt-1 text-sm">
+    
+      <div className="w-full">
+        <h1 className="text-3xl text-center mb-4">Hole {currentHole} : {wolf} is the Wolf</h1>
+        <div className="flex justify-around mt-1">
           <div>
-            <h3 className="font-semibold">Order</h3>
+            <h3 className="font-semibold text-xl">Order</h3>
             <ul>
               {(teeOrder || players).map((player, index) => (
                 <li key={index}>{player}</li>
@@ -44,7 +44,7 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold">Wolf Team</h4>
+            <h4 className="text-lg">Wolf Team</h4>
             <ul>
               {teams.wolfTeam.map((player, index) => (
                 <li key={index}>{player}</li>
@@ -52,7 +52,7 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold">Opponents</h4>
+            <h4 className="text-lg">Opponents</h4>
             <ul>
               {teams.opponents.map((player, index) => (
                 <li key={index}>{player}</li>
@@ -60,7 +60,7 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
             </ul>
           </div>
         </div>
-        <div className="flex justify-between mt-4 text-sm">
+        <div className="flex justify-around mt-4">
           <div className="flex flex-col gap-2">
             <label>
               <input
@@ -101,9 +101,6 @@ const WolfChoice = ({currentHole, players, wolfChoices, handleWolfChoiceChange, 
           </div>
         </div>
       </div>
-      
-      
-    </div>
   );
 }
 

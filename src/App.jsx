@@ -294,7 +294,7 @@ function App() {
           )}
         </div>
       ) : (
-        <div className="px-12 h-full">
+        <div className="px-8 py-6 h-full flex flex-col items-center gap-8">
           <WolfChoice
             currentHole={state.currentHole}
             players={state.players}
@@ -307,47 +307,35 @@ function App() {
             strokes={state.strokes[state.currentHole] || {}}
             onStrokeChange={handleStrokeChange}
           />
-          {/* <h3 className="text-lg font-semibold my-2">Enter Scores for Hole {state.currentHole}</h3> */}
-          <div className="flex gap-8 items-center mt-4">
-            <div className=" flex flex-col gap-2">
-              {teeOrder[state.currentHole - 1] && teeOrder[state.currentHole - 1].map((player, index) => (
-                <div key={player} className="flex items-center justify-between gap-5">
-                  <span>{player}:</span>
-                  <div className="flex items-center space-x-2 mb-2 mr-4">
-                    <button 
-                      className="px-2 bg-gray-500 text-white rounded"
-                      onClick={() => handleStrokeChange(player, (getCurrentHoleStrokes()[player] || 0) - 1)}
-                    >
-                      -
-                    </button>
-                    <input
-                      className="text-black rounded w-12 text-center"
-                      type="number"
-                      value={getCurrentHoleStrokes()[player] || ''}
-                      onChange={(e) => handleStrokeChange(player, parseInt(e.target.value) || '')}
-                    />
-                    <button 
-                      className="px-2 bg-gray-500 text-white rounded"
-                      onClick={() => handleStrokeChange(player, (getCurrentHoleStrokes()[player] || 0) + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
+          
+          <div className=" flex flex-col gap-4">
+            {teeOrder[state.currentHole - 1] && teeOrder[state.currentHole - 1].map((player, index) => (
+              <div key={player} className="flex items-center justify-between gap-24">
+                <span className="text-xl">{player}:</span>
+                <div className="flex items-center space-x-2 mb-2 mr-4">
+                  <button 
+                    className="px-2 bg-gray-500 text-white rounded"
+                    onClick={() => handleStrokeChange(player, (getCurrentHoleStrokes()[player] || 0) - 1)}
+                  >
+                    -
+                  </button>
+                  <input
+                    className="text-black rounded w-12 text-center"
+                    type="number"
+                    value={getCurrentHoleStrokes()[player] || ''}
+                    onChange={(e) => handleStrokeChange(player, parseInt(e.target.value) || '')}
+                  />
+                  <button 
+                    className="px-2 bg-gray-500 text-white rounded"
+                    onClick={() => handleStrokeChange(player, (getCurrentHoleStrokes()[player] || 0) + 1)}
+                  >
+                    +
+                  </button>
                 </div>
-              ))}
-            </div>
-            <div className="flex flex-col justify-between items-center gap-2">
-              <button className="border border-grey-300 rounded px-2 h-16" onClick={handleCalculatePoints}>Calculate Points</button>
-              <button
-                className="bg-gray-300 text-sky-950 h-16 px-2 rounded"
-                onClick={toggleScorePointCard}
-              >
-                {showScorecard ? 'Show Pointscard' : 'Show Scorecard'}
-              </button>
-             
-            </div>
-            
-          </div>
+              </div>
+            ))}
+          </div> 
+          
 
           <button
             className="bg-gray-300 text-sky-950 h-16 px-2 rounded"
@@ -367,36 +355,7 @@ function App() {
             onStrokeChange={handleStrokeChange}
             onPointsChange={handlePointsChange}
           />
-         
-          
-          
-          
-          {/* {showScorecard ? (
-            <Scorecard
-              players={state.players}
-              strokes={state.strokes}
-              currentHole={state.currentHole}
-              onStrokeChange={handleStrokeChange}
-            />
-          ) : (
-            <Pointscard
-              players={state.players}
-              points={state.points}
-              currentHole={state.currentHole}
-              onPointsChange={handlePointsChange}
-            />
-          )} */}
-
-
-          {/* <Scorecard
-            players={state.players}
-            strokes={state.strokes}
-          />
-          <Pointscard
-            players={state.players}
-            points={state.points}
-          /> */}
-
+        
 
           <div className="w-full flex items-center justify-between mt-6">
             <button className="border border-gray-300 rounded px-2 py-1 w-36 h-10" onClick={() => handleHoleChange(-1)} disabled={state.currentHole === 1}>Previous Hole</button>
