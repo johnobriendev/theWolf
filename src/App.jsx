@@ -3,6 +3,7 @@ import PlayerInput from "./components/PlayerInput";
 import WolfChoice from "./components/WolfChoice";
 import Scorecard from "./components/Scorecard";
 import Pointscard from "./components/Pointscard";
+import ScoreModal from "./components/ScoreModal";
 
 
 const initialState = {
@@ -83,6 +84,11 @@ function App() {
   // const [lastTwoHolesTeeOrder, setLastTwoHolesTeeOrder] = useState([]);
   const [teeOrder, setTeeOrder] = useState([]);
   const [showScorecard, setShowScorecard] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
 
   const handlePlayerNameChange = (e) => setNewPlayer(e.target.value);
@@ -341,8 +347,30 @@ function App() {
             </div>
             
           </div>
+
+          <button
+            className="bg-gray-300 text-sky-950 h-16 px-2 rounded"
+            onClick={toggleModal}
+          >
+            View Scorecard/Pointscard
+          </button>
+
+          <ScoreModal
+            isOpen={isModalOpen}
+            onClose={toggleModal}
+            showScorecard={showScorecard}
+            players={state.players}
+            strokes={state.strokes}
+            points={state.points}
+            currentHole={state.currentHole}
+            onStrokeChange={handleStrokeChange}
+            onPointsChange={handlePointsChange}
+          />
          
-          {showScorecard ? (
+          
+          
+          
+          {/* {showScorecard ? (
             <Scorecard
               players={state.players}
               strokes={state.strokes}
@@ -356,7 +384,7 @@ function App() {
               currentHole={state.currentHole}
               onPointsChange={handlePointsChange}
             />
-          )}
+          )} */}
 
 
           {/* <Scorecard
