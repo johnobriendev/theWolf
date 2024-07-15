@@ -7,7 +7,7 @@ const ScoreModal = ({ isOpen, onClose, players, strokes, points, currentHole, on
 
   return (
     <div className="fixed inset-0 bg-slate-800 text-gray-300 flex flex-col overflow-auto">
-      <div className="p-4">
+      <div className="py-4 px-12">
         <button onClick={onClose} className="float-right bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
           Close
         </button>

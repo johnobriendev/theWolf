@@ -169,6 +169,7 @@ function App() {
       ...prevState,
       currentHole: Math.max(1, Math.min(18, prevState.currentHole + delta))
     }));
+    handleCalculatePoints();
   };
   
 
