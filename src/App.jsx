@@ -3,6 +3,9 @@ import PlayerInput from "./components/PlayerInput";
 import WolfChoice from "./components/WolfChoice";
 import Scorecard from "./components/Scorecard";
 import Pointscard from "./components/Pointscard";
+import { Link, useNavigate } from "react-router-dom";
+import { GameContext } from "./contexts/GameContext";
+
 
 
 const initialState = {
@@ -77,22 +80,104 @@ const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
 };
 
 function App() {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(GameContext);
+  console.log("Current state:", state);
   const [newPlayer, setNewPlayer] = useState('');
-  // const [originalTeeOrder, setOriginalTeeOrder] = useState([]);
-  // const [lastTwoHolesTeeOrder, setLastTwoHolesTeeOrder] = useState([]);
   const [teeOrder, setTeeOrder] = useState([]);
   const [showScorecard, setShowScorecard] = useState(true);
+  const navigate = useNavigate();
+
+  // // Load game state from local storage
+  // useEffect(() => {
+  //   const savedState = JSON.parse(localStorage.getItem('gameState'));
+  //   if (savedState) {
+  //     setState(prevState => ({
+  //       ...prevState,
+  //       ...savedState
+  //     }));
+  //     const teeOrderFromState = savedState.players.map(player => [player]); // Initial setup for teeOrder
+  //     setTeeOrder(teeOrderFromState);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const savedState = JSON.parse(localStorage.getItem('gameState'));
+    if (savedState) {
+      setState(prevState => ({
+        ...prevState,
+        ...savedState,
+        players: Array.isArray(savedState.players) ? savedState.players : []
+      }));
+      
+      const teeOrderFromState = Array.isArray(savedState.players) 
+        ? savedState.players.map(player => [player])
+        : [];
+      setTeeOrder(teeOrderFromState);
+    }
+  }, []);
+
+  //     // Load game state from local storage
+  // useEffect(() => {
+  //   const savedState = JSON.parse(localStorage.getItem('gameState'));
+  //   if (savedState) {
+  //     setState(prevState => ({
+  //       ...prevState,
+  //       ...savedState
+  //     }));
+      
+  //     // Check if players exist in the saved state before setting up teeOrder
+  //     if (savedState.players && Array.isArray(savedState.players)) {
+  //       const teeOrderFromState = savedState.players.map(player => [player]);
+  //       setTeeOrder(teeOrderFromState);
+  //     } else {
+  //       // If no players in saved state, initialize with an empty array
+  //       setTeeOrder([]);
+  //     }
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const stateToSave = {
+      players: state.players,
+      currentHole: state.currentHole,
+      gameStarted: state.gameStarted,
+      wolfChoices: state.wolfChoices,
+      strokes: state.strokes,
+      points: state.points,
+      rules: state.rules
+      // Add any other necessary state properties here
+    };
+    localStorage.setItem('gameState', JSON.stringify(stateToSave));
+    console.log(stateToSave);
+  }, [state]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('gameState', JSON.stringify(state));
+  //   console.log(state);
+  // }, [state]);
 
 
   const handlePlayerNameChange = (e) => setNewPlayer(e.target.value);
   
+  // const handleAddPlayer = () => {
+  //   if (newPlayer.trim()){
+  //     setState((prevState) => ({
+  //       ...prevState,
+  //       players: [...prevState.players, newPlayer.trim()]
+  //     }));
+  //     setNewPlayer('');
+  //   }
+  // };
+
   const handleAddPlayer = () => {
-    if (newPlayer.trim()){
-      setState((prevState) => ({
-        ...prevState,
-        players: [...prevState.players, newPlayer.trim()]
-      }));
+    if (newPlayer.trim()) {
+      setState((prevState) => {
+        const currentPlayers = Array.isArray(prevState.players) ? prevState.players : [];
+        return {
+          ...prevState,
+          players: [...currentPlayers, newPlayer.trim()]
+        };
+      });
       setNewPlayer('');
     }
   };
@@ -138,12 +223,12 @@ function App() {
     });
   };
 
-  const handleTeamsUpdate = (hole, updatedTeams) => {
-    setTeams((prevTeams) => ({
-      ...prevTeams,
-      [hole]: updatedTeams
-    }));
-  };
+  // const handleTeamsUpdate = (hole, updatedTeams) => {
+  //   setTeams((prevTeams) => ({
+  //     ...prevTeams,
+  //     [hole]: updatedTeams
+  //   }));
+  // };
 
   const handleStrokeChange = (player, strokes) => {
     setState((prevState) => ({
@@ -254,14 +339,27 @@ function App() {
     });
   };
 
-
-  const toggleScorePointCard = () => {
-    setShowScorecard((prevShowScorecard) => !prevShowScorecard);
+  const handleClearLocalStorage = () => {
+    localStorage.removeItem('gameState');
+    setState(initialState);
+    setTeeOrder([]);
+    setShowScorecard(true);
+    console.log('Gane Reset: Local Storage Cleared')
   };
+
+  // const toggleScorePointCard = () => {
+  //   setShowScorecard((prevShowScorecard) => !prevShowScorecard);
+  // };
+  // const toggleScorecard = () => {
+  //   setShowScorecard((prevShowScorecard) => !prevShowScorecard);
+  // };
   
 
   return(
     <div className="py-4 h-screen bg-slate-800 text-gray-300">
+      <div>
+        <button onClick={handleClearLocalStorage}>Clear Local Storage</button>
+      </div>
       {!state.gameStarted ? (
         <div className="p-4 flex flex-col justify-center items-center gap-16 ">
           <div className="flex flex-col items-center gap-4">
@@ -276,13 +374,13 @@ function App() {
             handleStartGame={handleStartGame}
           />
           <ul className="flex flex-col gap-16">
-            {state.players.map((player, index) => (
+            {state.players && state.players.map((player, index) => (
               <li className="flex justify-between items-center gap-24" key={index}>
                <span className="text-xl">{player}</span> <button className="border border-gray-300 rounded py-1 px-2" onClick={() => handleDeletePlayer(index)}>Delete</button>
               </li>
             ))}
           </ul>
-          {state.players.length === 4 && (
+          {state.players && state.players.length === 4 && (
             <button className="border border-gray-300 rounded py-2 px-4 text-2xl my-6"  onClick={handleStartGame}>Start Game</button>
           )}
         </div>
@@ -296,7 +394,7 @@ function App() {
             // teeOrder={teeOrder}
             teeOrder={teeOrder[state.currentHole - 1] || state.players}
             // teeOrder={getCurrentTeeOrder()}
-            handleTeamsUpdate={handleTeamsUpdate}
+            // handleTeamsUpdate={handleTeamsUpdate}
             strokes={state.strokes[state.currentHole] || {}}
             onStrokeChange={handleStrokeChange}
           />
@@ -331,16 +429,22 @@ function App() {
             </div>
             <div className="flex flex-col justify-between items-center gap-2">
               <button className="border border-grey-300 rounded px-2 h-16" onClick={handleCalculatePoints}>Calculate Points</button>
-              <button
+              {/* <button
                 className="bg-gray-300 text-sky-950 h-16 px-2 rounded"
                 onClick={toggleScorePointCard}
               >
                 {showScorecard ? 'Show Pointscard' : 'Show Scorecard'}
-              </button>
+              </button> */}
              
             </div>
             
           </div>
+
+          {/* <Link 
+          to='/cards'
+          >
+            <button>Show Cards Page</button>
+          </Link> */}
          
           {showScorecard ? (
             <Scorecard
