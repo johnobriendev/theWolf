@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const RulesPage = () => {
   return (
-    <div className="p-4 bg-slate-800 text-gray-300 font-light leading-relaxed h-full">
+    <div className="p-4 bg-slate-800 text-gray-300 font-light leading-loose h-full">
       <Link to={'/'}>Home</Link>
       <h1 className="text-3xl font-bold mb-4 text-center">Rules</h1>
      <div className='mx-8 '>

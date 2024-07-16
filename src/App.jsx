@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PlayerInput from "./components/PlayerInput";
 import WolfChoice from "./components/WolfChoice";
-import Scorecard from "./components/Scorecard";
-import Pointscard from "./components/Pointscard";
 import ScoreModal from "./components/ScoreModal";
 
 
@@ -80,10 +78,7 @@ const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
 function App() {
   const [state, setState] = useState(initialState);
   const [newPlayer, setNewPlayer] = useState('');
-  // const [originalTeeOrder, setOriginalTeeOrder] = useState([]);
-  // const [lastTwoHolesTeeOrder, setLastTwoHolesTeeOrder] = useState([]);
   const [teeOrder, setTeeOrder] = useState([]);
-  const [showScorecard, setShowScorecard] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
@@ -144,12 +139,12 @@ function App() {
     });
   };
 
-  const handleTeamsUpdate = (hole, updatedTeams) => {
-    setTeams((prevTeams) => ({
-      ...prevTeams,
-      [hole]: updatedTeams
-    }));
-  };
+  // const handleTeamsUpdate = (hole, updatedTeams) => {
+  //   setTeams((prevTeams) => ({
+  //     ...prevTeams,
+  //     [hole]: updatedTeams
+  //   }));
+  // };
 
   const handleStrokeChange = (player, strokes) => {
     setState((prevState) => ({
@@ -262,11 +257,6 @@ function App() {
   };
 
 
-  const toggleScorePointCard = () => {
-    setShowScorecard((prevShowScorecard) => !prevShowScorecard);
-  };
-  
-
   return(
     <div className="py-4 h-screen bg-slate-800 text-gray-300">
       {!state.gameStarted ? (
@@ -303,7 +293,7 @@ function App() {
             // teeOrder={teeOrder}
             teeOrder={teeOrder[state.currentHole - 1] || state.players}
             // teeOrder={getCurrentTeeOrder()}
-            handleTeamsUpdate={handleTeamsUpdate}
+            // handleTeamsUpdate={handleTeamsUpdate}
             strokes={state.strokes[state.currentHole] || {}}
             onStrokeChange={handleStrokeChange}
           />
