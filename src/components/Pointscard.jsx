@@ -37,7 +37,7 @@ const Pointscard = ({ players, points }) => {
           <tbody>
             {players.map((player, playerIndex) => (
               <tr key={player}>
-                <td>{player}</td>
+                <td className='font-light'>{player}</td>
                 {frontNineHoles.map(hole => (
                   <td key={hole}>
                     {points[hole] && points[hole][player] !== undefined ? points[hole][player] : '-'}
@@ -66,7 +66,7 @@ const Pointscard = ({ players, points }) => {
           <tbody>
             {players.map((player, playerIndex) => (
               <tr key={player}>
-                <td>{player}</td>
+                <td className='font-light'>{player}</td>
                 {backNineHoles.map(hole => (
                   <td key={hole}>
                     {points[hole] && points[hole][player] !== undefined ? points[hole][player] : '-'}

@@ -37,7 +37,7 @@ const Scorecard = ({ players, strokes }) => {
           <tbody>
             {players.map((player, playerIndex) => (
               <tr key={player}>
-                <td>{player}</td>
+                <td className='font-light'>{player}</td>
                 {frontNineHoles.map(hole => (
                   <td key={hole}>
                     {strokes[hole] && strokes[hole][player] !== undefined ? strokes[hole][player] : '-' }
