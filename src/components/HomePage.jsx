@@ -12,6 +12,9 @@ const HomePage = () => {
         <Link to="/game">
           <button className="border border-gray-300 rounded px-4 py-2">Play Game</button>
         </Link>
+        <Link to="/settings">
+          <button className="border border-gray-300 rounded px-4 py-2">Settings</button>
+        </Link>
       </div>
     </div>
   );

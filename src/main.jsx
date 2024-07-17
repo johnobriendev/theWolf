@@ -5,6 +5,8 @@ import App from './App.jsx'
 import HomePage from './components/HomePage';
 import RulesPage from './components/RulesPage';
 import './index.css'
+import SettingsPage from './components/SettingsPage.jsx';
+import { RulesProvider } from './contexts/RulesContext.jsx';
 
 
 const router = createBrowserRouter([
@@ -20,10 +22,17 @@ const router = createBrowserRouter([
     path: '/game',
     element: <App />,
   },
+  {
+    path: '/settings',
+    element: <SettingsPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RulesProvider>
+      <RouterProvider router={router} />
+    </RulesProvider>
+    
   </React.StrictMode>,
 )
