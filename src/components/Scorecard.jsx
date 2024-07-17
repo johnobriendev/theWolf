@@ -23,15 +23,15 @@ const Scorecard = ({ players, strokes }) => {
       <h3 className='font-semibold text-lg'>Scorecard</h3>
 
       {/* Table for Holes 1-9 */}
-      <div className="score-table">
-        <table className='w-full text-sm'>
+      <div className="score-table mt-5">
+        <table className='w-full text-xl'>
           <thead>
             <tr>
-              <th>Player</th>
+              <th className='font-light'>Player</th>
               {frontNineHoles.map(hole => (
-                <th key={hole}>{hole}</th>
+                <th className='font-light' key={hole}>{hole}</th>
               ))}
-              <th>F9</th>
+              <th className='font-light'>F9</th>
             </tr>
           </thead>
           <tbody>
@@ -51,22 +51,22 @@ const Scorecard = ({ players, strokes }) => {
       </div>
 
       {/* Table for Holes 10-18 */}
-      <div className="score-table">
-        <table className='w-full text-sm'>
+      <div className="score-table mt-4">
+        <table className='w-full text-xl'>
           <thead>
             <tr>
-              <th>Player</th>
+              <th className='font-light'>Player</th>
               {backNineHoles.map(hole => (
-                <th key={hole}>{hole}</th>
+                <th className='font-light' key={hole}>{hole}</th>
               ))}
-              <th>B9</th>
-              <th>Total</th>
+              <th className='font-light'>B9</th>
+              <th className='font-light'>Total</th>
             </tr>
           </thead>
           <tbody>
             {players.map((player, playerIndex) => (
               <tr key={player}>
-                <td>{player}</td>
+                <td className='font-light'>{player}</td>
                 {backNineHoles.map(hole => (
                   <td key={hole}>
                     {strokes[hole] && strokes[hole][player] !== undefined ? strokes[hole][player] : '-'}

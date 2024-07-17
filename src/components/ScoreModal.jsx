@@ -12,7 +12,7 @@ const ScoreModal = ({ isOpen, onClose, players, strokes, points, currentHole, on
           Close
         </button>
         <h2 className="text-2xl font-bold mb-4">Scorecard and Pointscard</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-full">
           <div>
             <Scorecard
               players={players}

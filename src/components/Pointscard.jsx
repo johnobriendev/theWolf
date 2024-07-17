@@ -23,15 +23,15 @@ const Pointscard = ({ players, points }) => {
       <h2 className='font-semibold text-lg'>Pointscard</h2>
 
       {/* Table for Holes 1-9 */}
-      <div className="points-table">
-        <table className='w-full text-sm'>
+      <div className="points-table mt-5">
+        <table className='w-full text-xl'>
           <thead>
             <tr>
-              <th>Player</th>
+              <th className='font-light'>Player</th>
               {frontNineHoles.map(hole => (
-                <th key={hole}>{hole}</th>
+                <th className='font-light' key={hole}>{hole}</th>
               ))}
-              <th>F9</th>
+              <th className='font-light'>F9</th>
             </tr>
           </thead>
           <tbody>
@@ -51,16 +51,16 @@ const Pointscard = ({ players, points }) => {
       </div>
 
       {/* Table for Holes 10-18 */}
-      <div className="points-table">
-        <table className='w-full text-sm'>
+      <div className="points-table mt-4">
+        <table className='w-full text-xl'>
           <thead>
             <tr>
-              <th>Player</th>
+              <th className='font-light'>Player</th>
               {backNineHoles.map(hole => (
-                <th key={hole}>{hole}</th>
+                <th className='font-light' key={hole}>{hole}</th>
               ))}
-              <th>B9</th>
-              <th>Total</th>
+              <th className='font-light'>B9</th>
+              <th className='font-light'>Total</th>
             </tr>
           </thead>
           <tbody>
