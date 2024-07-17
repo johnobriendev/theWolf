@@ -57,8 +57,8 @@ const SettingsPage = () => {
           </div>
         ))}
       </div>
-      <button onClick={handleSave} className="mt-8 bg-blue-500 text-white px-4 py-2 rounded">
-        Save Changes
+      <button onClick={handleSave} className="mt-8 border border-gray-300 text-white px-4 py-2 rounded">
+        Back to Home
       </button>
     </div>
   );
