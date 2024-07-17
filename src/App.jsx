@@ -337,7 +337,7 @@ function App() {
           <ScoreModal
             isOpen={isModalOpen}
             onClose={toggleModal}
-            showScorecard={showScorecard}
+            // showScorecard={showScorecard}
             players={state.players}
             strokes={state.strokes}
             points={state.points}
