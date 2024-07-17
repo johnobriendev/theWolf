@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import PlayerInput from "./components/PlayerInput";
 import WolfChoice from "./components/WolfChoice";
 import ScoreModal from "./components/ScoreModal";
+import { useRules } from "./contexts/RulesContext";
+
 
 
 const initialState = {
@@ -11,6 +13,7 @@ const initialState = {
   wolfChoices: {},
   strokes: {},
   points:{},
+  
   rules: {
     blindWolfWin: { wolf: 6, opponents: 0 },
     blindWolfLose: { wolf: 0, opponents: 2 },
@@ -76,10 +79,17 @@ const calculatePoints = (wolfChoice, wolfScores, opponentScores, rules) => {
 };
 
 function App() {
-  const [state, setState] = useState(initialState);
+  const { rules } = useRules();
+  const [state, setState] = useState({
+    ...initialState,
+    rules: rules, // Use the rules from the context
+  });
+  // const [state, setState] = useState(initialState);
   const [newPlayer, setNewPlayer] = useState('');
   const [teeOrder, setTeeOrder] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+ 
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -138,13 +148,6 @@ function App() {
       };
     });
   };
-
-  // const handleTeamsUpdate = (hole, updatedTeams) => {
-  //   setTeams((prevTeams) => ({
-  //     ...prevTeams,
-  //     [hole]: updatedTeams
-  //   }));
-  // };
 
   const handleStrokeChange = (player, strokes) => {
     setState((prevState) => ({
@@ -337,7 +340,6 @@ function App() {
           <ScoreModal
             isOpen={isModalOpen}
             onClose={toggleModal}
-            showScorecard={showScorecard}
             players={state.players}
             strokes={state.strokes}
             points={state.points}
